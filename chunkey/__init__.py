@@ -1,5 +1,7 @@
 """
 
+CHUNKEY
+
 will convert an extant S3 object to an HLS stream (streams determined
 by encode_profiles.json) and generate a manifest -- all of which
 will be uploaded next to the salient mezzanine file, and delivered to
@@ -15,7 +17,7 @@ example use:
         )
     print VideoChunkerInstance.manifest_url
 
-Copyright (C) 2016 @yro | Gregory Martin
+Copyright (C) 2016 @edx | edX
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,8 +31,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-Auth/Maint: greg@willowgrain.io
 
 """
 

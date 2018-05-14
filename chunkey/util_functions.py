@@ -3,10 +3,8 @@
 
 """
 
-import os
 import sys
 import subprocess
-import datetime
 
 
 def seconds_from_string(duration):
@@ -49,9 +47,8 @@ def status_bar(process):
                 i = int(pctg * 20.0)
                 sys.stdout.write("%s : [%-20s] %d%%" % ('Transcode', '=' * i, int(pctg * 100)))
                 sys.stdout.flush()
-    """
-    Just for politeness
-    """
+
+    # For display politeness
     sys.stdout.write('\r')
     sys.stdout.write("%s : [%-20s] %d%%" % ('Transcode', '=' * 20, 100))
     sys.stdout.flush()

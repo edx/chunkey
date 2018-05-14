@@ -1,0 +1,47 @@
+{
+    "ENCODE_PROFILES": {
+        "0": {
+            "scale": "1920:1080",
+            "audio_depth": "64k",
+            "rate_factor": "17",
+            "fps": "29.97"
+        },
+        "1": {
+            "scale": "1664:936",
+            "audio_depth": "64k",
+            "rate_factor": "22",
+            "fps": "29.97"
+        },
+        "2": {
+            "scale": "1280:720",
+            "audio_depth": "64k",
+            "rate_factor": "23",
+            "fps": "29.97"
+            },
+        "3": {
+            "scale": "960:540",
+            "audio_depth": "64k",
+            "rate_factor": "24",
+            "fps": "29.97"
+        },
+        "4": {
+            "scale": "640:360",
+            "audio_depth": "64k",
+            "rate_factor": "27",
+            "fps": "29.97"
+        },
+        "5": {
+            "scale": "512:288",
+            "audio_depth": "32k",
+            "rate_factor": "30",
+            "fps": "29.97"
+        },
+        "6": {
+            "scale": "384:216",
+            "audio_depth": "32k",
+            "rate_factor": "30",
+            "fps": "29.97"
+        }
+    },
+    "HLS_TIME": 9
+}

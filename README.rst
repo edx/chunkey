@@ -4,15 +4,15 @@ Chunkey
 HTTP Live Stream Encoder for endpoints in AWS EC2
 --------------------------------------------------
 
-This is a quick HLS library/crawler for conversion from static file
+This is an HLS library/crawler for conversion from static file
 hosting to an HLS solution for quick and high-quality/low-latency
-streaming that is adaptible for differing global connection speeds.
+streaming that is adaptable for differing global connection speeds.
 
 
 |Build|
 
 | [v1.2.3] 2018.5
-| (c)(GNU-GPL) @yro 2016
+| (c)(GNU-GPL) @edx 2016
 
 Install
 -------
@@ -93,4 +93,3 @@ Retrieve data:
 
     VidChunk.manifest_url -- endpoint url for manifest (aws s3) or local dir path
 
-.. |Build| image:: https://travis-ci.org/yro/vhls.svg?branch=master

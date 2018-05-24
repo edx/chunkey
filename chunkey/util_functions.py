@@ -72,14 +72,16 @@ def probe_video(VideoFileObject):
         if "Duration: " in line:
             # Duration
             vid_duration = line.split('Duration: ')[1].split(',')[0].strip()
-            VideoFileObject.duration = seconds_from_string(
-                duration=vid_duration
-            )
-            # Bitrate
-            try:
-                VideoFileObject.bitrate = float(line.split('bitrate: ')[1].strip().split()[0])
-            except ValueError:
-                pass
+
+            if vid_duration != 'N/A':
+                VideoFileObject.duration = seconds_from_string(
+                    duration=vid_duration
+                )
+                # Bitrate
+                try:
+                    VideoFileObject.bitrate = float(line.split('bitrate: ')[1].strip().split()[0])
+                except ValueError:
+                    pass
 
         elif "Stream #" in line and 'Video: ' in line:
             codec_array = line.strip().split(',')

@@ -7,6 +7,8 @@ Generate master manifest, upload (easy, via boto) to output bucket
 
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
 import subprocess
@@ -17,7 +19,8 @@ from boto.s3.key import Key
 import shutil
 import requests
 
-import util_functions
+from . import util_functions
+import six
 
 try:
     boto.config.add_section('Boto')
@@ -90,7 +93,7 @@ class VideoPipeline(object):
         Function to test and DL from url
         """
         d = requests.head(self.mezz_file, timeout=20)
-        print d.status_code
+        print(d.status_code)
         if d.status_code > 299:
             return False
 
@@ -196,7 +199,7 @@ class VideoPipeline(object):
 
         '''
         encode_profiles = self.settings.TRANSCODE_PROFILES
-        for profile_name, profile in encode_profiles.iteritems():
+        for profile_name, profile in six.iteritems(encode_profiles):
             ffcommand = ['ffmpeg -y -i']
             ffcommand.append(self.mezz_file)
             """
@@ -304,7 +307,7 @@ class VideoPipeline(object):
 
         '''
         encode_profiles = self.settings.TRANSCODE_PROFILES
-        for profile_name, profile in encode_profiles.iteritems():
+        for profile_name, profile in six.iteritems(encode_profiles):
             T1 = TransportStream()
             """
             TS manifest

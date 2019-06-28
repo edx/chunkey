@@ -34,13 +34,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
+from __future__ import absolute_import
 import os
 import sys
 import nose
 import json
 
-from encode_pipeline import VideoPipeline
-import util_functions
+from .encode_pipeline import VideoPipeline
+from . import util_functions
 
 
 class Chunkey(object):

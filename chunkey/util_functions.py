@@ -3,6 +3,8 @@
 
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 import sys
 import subprocess
 
@@ -52,7 +54,7 @@ def status_bar(process):
     sys.stdout.write('\r')
     sys.stdout.write("%s : [%-20s] %d%%" % ('Transcode', '=' * 20, 100))
     sys.stdout.flush()
-    print ''
+    print('')
 
 
 def probe_video(VideoFileObject):

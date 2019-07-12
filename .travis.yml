@@ -1,0 +1,43 @@
+language: python
+# dist: xenial  # required for Python >= 3.7 (travis-ci/travis-ci#9069)
+python:
+  - 2.7
+  - 3.6
+  - 3.7
+env:
+  - TOXENV=quality
+  
+matrix:
+  include:
+    - python: 2.7
+      env: TOXENV=quality
+    - python: 3.7
+      env: TOXENV=quality
+  allow_failures:
+    - python: 3.7
+
+# Cache the pip directory. "cache: pip" doesn't work due to install override. See https://github.com/travis-ci/travis-ci/issues/3239.
+cache:
+  - directories:
+    - $HOME/.cache/pip
+
+before_install:
+  - curl -O https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.5.2.zip
+  - unzip elasticsearch-1.5.2.zip
+  - elasticsearch-1.5.2/bin/elasticsearch -d
+
+install:
+  - make upgrade 
+  - make requirements
+
+script: make validate
+
+
+deploy:
+  provider: pypi
+  user: edx
+  password:
+    secure: FIBjU6/5WPzUHqNWO9OqPdt3YipxSs7WPTnKMTJwlEvixXCIRkmAXd1CBd7kSYa0GvCfLSei7xLKsgUKaCe+OBsnw/ZDBllZv5EvLJwdKn/EKrPxhxeQ6/SNtqafWQ3mLL1+gosh0RHQdy0HlwwS+m/Qsf+51ohIJVpt+5jwxFA=
+  distributions: sdist bdist_wheel
+  on:
+    tags: true

@@ -47,12 +47,12 @@ def status_bar(process):
 
                 sys.stdout.write('\r')
                 i = int(pctg * 20.0)
-                sys.stdout.write("%s : [%-20s] %d%%" % ('Transcode', '=' * i, int(pctg * 100)))
+                sys.stdout.write("%s : [%-20s] %d%%" % ('Transcode', '=' * i, int(pctg * 100)))  # pylint: disable=unicode-format-string
                 sys.stdout.flush()
 
     # For display politeness
     sys.stdout.write('\r')
-    sys.stdout.write("%s : [%-20s] %d%%" % ('Transcode', '=' * 20, 100))
+    sys.stdout.write("%s : [%-20s] %d%%" % ('Transcode', '=' * 20, 100))  # pylint: disable=unicode-format-string
     sys.stdout.flush()
     print('')
 

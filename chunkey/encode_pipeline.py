@@ -13,18 +13,18 @@ import os
 import sys
 import subprocess
 import fnmatch
+import shutil
 import boto
 import boto.s3
 from boto.s3.key import Key
-import shutil
 import requests
 
-from . import util_functions
 import six
+from . import util_functions
 
 try:
     boto.config.add_section('Boto')
-except:
+except:  # noqa  # pylint: disable=bare-except
     pass
 boto.config.set('Boto', 'http_socket_timeout', '600')
 
@@ -127,7 +127,7 @@ class VideoPipeline(object):
         horiz_resolution = float(video_file.resolution.split('x')[0])
         vert_resolution = float(video_file.resolution.split('x')[1])
 
-        """Aspect Ratio as float"""
+        # Aspect Ratio as float
         if vert_resolution is not None and horiz_resolution is not None:
             aspect_ratio = float(horiz_resolution) / float(vert_resolution)
         else:
@@ -141,42 +141,34 @@ class VideoPipeline(object):
         elif vert_resolution == 1080.0 and horiz_resolution == 1440.0:
             return scalar_command
 
-        """
-        Pad videos with differing aspect ratios,
-        either in pillar or letter box
-        """
+        # Pad videos with differing aspect ratios, either in pillar or letter box
         target_vertical_resolution = profile['scale'].split(':')[1]
         target_horiz_resolution = profile['scale'].split(':')[0]
 
         if aspect_ratio > self.settings.TARGET_ASPECT_RATIO:
-            """
-            LETTERBOX
-            """
-            scalar = (float(target_vertical_resolution) -
-                      (float(target_horiz_resolution) / aspect_ratio)) / 2
+            # LETTERBOX
+            scalar = (float(target_vertical_resolution)
+                      - (float(target_horiz_resolution) / aspect_ratio)) / 2
 
             scalar_command = "-vf scale=" + target_horiz_resolution
-            scalar_command += ":" + str(int(target_vertical_resolution) -
-                                        (int(scalar) * 2))
+            scalar_command += ":" + str(int(target_vertical_resolution)
+                                        - (int(scalar) * 2))
 
-            """Padding"""
+            # padding
             scalar_command += ",pad=" + target_horiz_resolution + \
                 ":" + target_vertical_resolution
             scalar_command += ":0:" + str(int(scalar))
             return scalar_command
-
         if aspect_ratio < self.settings.TARGET_ASPECT_RATIO:
-            """
-            PILLARBOX
-            """
-            scalar = (float(target_horiz_resolution) -
-                      (aspect_ratio * float(target_vertical_resolution))) / 2
+            # PILLARBOX
+            scalar = (float(target_horiz_resolution)
+                      - (aspect_ratio * float(target_vertical_resolution))) / 2
 
-            scalar_command = "-vf scale=" + str(int(target_horiz_resolution) -
-                                                (int(scalar) * 2))
+            scalar_command = "-vf scale=" + str(int(target_horiz_resolution)
+                                                - (int(scalar) * 2))
             scalar_command += ":" + target_vertical_resolution
 
-            """Padding"""
+            # Padding
             scalar_command += ",pad="
             scalar_command += target_horiz_resolution + ":"
             scalar_command += target_vertical_resolution
@@ -197,35 +189,28 @@ class VideoPipeline(object):
         -crf 18 -r 24 -g 72 -f hls -hls_time 9 -hls_list_size 0 -s 1280x720
         /Users/tiagorodriguez/Desktop/HLS_testbed/OUTPUT_TEST/1280x720.m3u8
 
-        '''
+        '''  # pylint: disable=pointless-string-statement
         encode_profiles = self.settings.TRANSCODE_PROFILES
         for profile_name, profile in six.iteritems(encode_profiles):
             ffcommand = ['ffmpeg -y -i']
             ffcommand.append(self.mezz_file)
-            """
-            Add Audio
-            """
+
+            # Add Audio
             ffcommand.append("-b:a")
             ffcommand.append(profile['audio_depth'])
-            """
-            Add codec
-            """
+
+            # Add codec
             ffcommand.append("-pix_fmt yuv420p")
             ffcommand.append("-profile:v main -level 3.2")
             ffcommand.append("-maxrate 2M -bufsize 6M")
             ffcommand.append("-c:v")
             ffcommand.append("libx264")
-            """
-            Add scaling / rate factor / framerate
-            """
-            """
-            SCALING COMMANDS
-            """
+            # Add scaling / rate factor / framerate
+            # SCALING COMMANDS
             scalar = self._scalar_commands(profile=profile)
             ffcommand.append(scalar)
-            """
-            RATE FACTOR
-            """
+
+            # RATE FACTOR
             ffcommand.append("-crf")
             ffcommand.append(profile['rate_factor'])
             ffcommand.append("-r")
@@ -233,9 +218,8 @@ class VideoPipeline(object):
             ffcommand.append("-g")
             ffcommand.append("72")
             ffcommand.append("-f")
-            """
-            Add HLS Commands
-            """
+
+            # Add HLS Commands
             ffcommand.append("hls")
             ffcommand.append("-hls_time")
             ffcommand.append(str(self.settings.HLS_TIME))
@@ -243,20 +227,20 @@ class VideoPipeline(object):
             ffcommand.append("0")
             ffcommand.append("-s")
             ffcommand.append(profile['scale'].replace(':', 'x'))
-            """
-            Add output files
-            """
+
+            # Add output files
             destination = os.path.join(self.video_root, self.video_id)
             destination += '_' + profile_name + '_'
             destination += ".m3u8"
 
             ffcommand.append(destination)
-            if len(ffcommand) > 0:
+            if ffcommand:
 
                 self.encode_list.append(' '.join((ffcommand)))
         return None
 
     def _execute_encode(self):
+        # pylint: disable=missing-docstring
         for command in self.encode_list:
 
             process = subprocess.Popen(
@@ -266,14 +250,13 @@ class VideoPipeline(object):
                 shell=True,
                 universal_newlines=True
             )
-            """
-            get vid info, gen status
-            """
+
+            # get vid info, gen status
             util_functions.status_bar(process=process)
             """
             We'll let this fail quietly
             Fault tolerance in manifest gen will pick up.
-            """
+            """  # pylint: disable=pointless-string-statement
         return None
 
     def _determine_bandwidth(self, profile_name):
@@ -282,9 +265,10 @@ class VideoPipeline(object):
         """
         max_bandwidth = 0.0
 
-        for file in os.listdir(self.video_root):
-            if fnmatch.fnmatch(file, '*.ts') and fnmatch.fnmatch(file, '_'.join((self.video_id, profile_name, '*'))):
-                bandwidth = float(os.stat(os.path.join(self.video_root, file)).st_size) / 9
+        for input_file in os.listdir(self.video_root):
+            if fnmatch.fnmatch(input_file, '*.ts') and \
+                    fnmatch.fnmatch(input_file, '_'.join((self.video_id, profile_name, '*'))):
+                bandwidth = float(os.stat(os.path.join(self.video_root, input_file)).st_size) / 9
                 if bandwidth > max_bandwidth:
                     max_bandwidth = bandwidth
 
@@ -307,23 +291,21 @@ class VideoPipeline(object):
 
         '''
         encode_profiles = self.settings.TRANSCODE_PROFILES
-        for profile_name, profile in six.iteritems(encode_profiles):
+
+        for profile_name, _ in encode_profiles.iteritems():
             T1 = TransportStream()
-            """
-            TS manifest
-            """
+
+            # TS manifest
             T1.ts_manifest = self.video_id
             T1.ts_manifest += '_' + profile_name + '_'
             T1.ts_manifest += ".m3u8"
-            """
-            Bandwidth
-            """
+
+            # Bandwidth
             T1.bandwidth = int(self._determine_bandwidth(
                 profile_name=profile_name
             ))
-            """
-            resolution
-            """
+
+            # resolution
             pre_reso = self.settings.TRANSCODE_PROFILES[profile_name]['scale']
             T1.resolution = pre_reso.replace(':', 'x')
 
@@ -334,12 +316,11 @@ class VideoPipeline(object):
     def _manifest_generate(self):
         """
         Fault Tolerate corrupt Transport Stream components
-
         """
-        for file in os.listdir(self.video_root):
-            if fnmatch.fnmatch(file, '*.ts'):
+        for input_file in os.listdir(self.video_root):
+            if fnmatch.fnmatch(input_file, '*.ts'):
                 TransportVideoObject = VideoFile(
-                    filepath=os.path.join(self.video_root, file)
+                    filepath=os.path.join(self.video_root, input_file)
                 )
                 analyzedTransportVideoObject = util_functions.probe_video(VideoFileObject=TransportVideoObject)
                 if analyzedTransportVideoObject.duration is None:
@@ -347,8 +328,8 @@ class VideoPipeline(object):
                     The Transport stream will fail down or up if a ts file is missing, but we cannot remove the
                     ts from the manifest, as the time will "jump" -- HLS will fail-over to the next lower encode
                     for that ~11 sec or empty file
-                    """
-                    os.remove(os.path.join(self.video_root, file))
+                    """  # pylint: disable=pointless-string-statement
+                    os.remove(os.path.join(self.video_root, input_file))
 
         with open(os.path.join(self.video_root, self.manifest), 'w') as m1:
             m1.write('#EXTM3U')
@@ -401,19 +382,16 @@ class VideoPipeline(object):
                         self.video_id,
                         transport_stream
                     ))
-                """
-                Actually upload the thing
-                """
+                    # Actually upload the thing
                 sys.stdout.write('\r')
-                sys.stdout.write("%s : %s" % ('Upload', transport_stream))
+                sys.stdout.write("%s : %s" % ('Upload', transport_stream))  # pylint: disable=unicode-format-string
                 upload_key.set_contents_from_filename(
                     os.path.join(self.video_root, transport_stream)
                 )
                 upload_key.set_acl('public-read')
                 sys.stdout.flush()
 
-        if self.settings.DELIVER_ROOT is not None and \
-                len(self.settings.DELIVER_ROOT) > 0:
+        if self.settings.DELIVER_ROOT:
             self.manifest_url = '/'.join((
                 'https://s3.amazonaws.com',
                 self.settings.DELIVER_BUCKET,
@@ -443,6 +421,7 @@ class VideoPipeline(object):
 
 def main():
     pass
+
 
 if __name__ == '__main__':
     sys.exit(main())

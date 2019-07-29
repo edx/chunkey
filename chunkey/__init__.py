@@ -1,5 +1,15 @@
-"""
+from __future__ import absolute_import
+import os
+import sys
+import json
+import nose
 
+from .encode_pipeline import VideoPipeline
+from . import util_functions
+
+
+class Chunkey(object):
+    """
 CHUNKEY
 
 will convert an extant S3 object to an HLS stream (streams determined
@@ -10,10 +20,10 @@ if you're into directories on S3)
 
 example use:
     VideoChunkerInstance = Chunkey(
-        mezz_file = '${path/to/mezz_file}', (can be URL)
-        DELIVER_BUCKET='${AWS S3 bucket to deliver to}', [optional]
-        ACCESS_KEY_ID='${AWS Access key ID}', [optional]
-        SECRET_ACCESS_KEY='${AWS Secret Access Key}' [optional]
+        mezz_file = path/to/mezz_file, (can be URL)
+        DELIVER_BUCKET=AWS S3 bucket to deliver to, [optional]
+        ACCESS_KEY_ID=AWS Access key ID, [optional]
+        SECRET_ACCESS_KEY=AWS Secret Access Key [optional]
         )
     print VideoChunkerInstance.manifest_url
 
@@ -33,19 +43,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-
-from __future__ import absolute_import
-import os
-import sys
-import nose
-import json
-
-from .encode_pipeline import VideoPipeline
-from . import util_functions
-
-
-class Chunkey(object):
-
     def __init__(self, **kwargs):
         self.mezz_file = kwargs.get('mezz_file', None)
         self.manifest = kwargs.get('manifest', None)
@@ -92,7 +89,7 @@ class Chunkey(object):
         os.chdir(test_dir)
         test_bool = nose.run()
 
-        '''Return to previous state'''
+        # Return to previous state
         os.chdir(current_dir)
         return test_bool
 

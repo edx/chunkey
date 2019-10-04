@@ -4,14 +4,11 @@ import os
 import sys
 import unittest
 import subprocess
-import boto
-
 """
 tests for VidChunk
 
 """
 from chunkey.encode_pipeline import VideoPipeline
-import chunkey.util_functions
 
 
 @unittest.skip("FFmpeg test")

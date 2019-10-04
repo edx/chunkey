@@ -9,10 +9,7 @@ import os
 import sys
 import unittest
 import json
-
-import chunkey.util_functions
-from chunkey import VidChunk
-import chunkey.encode_pipeline
+import chunkey.util_functions as util_functions
 
 
 class TestVidChunkBuild(unittest.TestCase):

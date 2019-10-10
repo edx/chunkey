@@ -2,7 +2,7 @@ owner: azarembok
 
 oeps:
     oep-2: true
-    oep-7: false
+    oep-7: true
     oep-18: false
 
 tags:

@@ -1,20 +1,13 @@
 language: python
 # dist: xenial  # required for Python >= 3.7 (travis-ci/travis-ci#9069)
+
 python:
   - 2.7
-  - 3.6
   - 3.7
+
 env:
   - TOXENV=quality
-  
-matrix:
-  include:
-    - python: 2.7
-      env: TOXENV=quality
-    - python: 3.7
-      env: TOXENV=quality
-  allow_failures:
-    - python: 3.7
+  - TOXENV=unittest
 
 # Cache the pip directory. "cache: pip" doesn't work due to install override. See https://github.com/travis-ci/travis-ci/issues/3239.
 cache:
@@ -30,7 +23,8 @@ install:
   - make upgrade 
   - make requirements
 
-script: make validate
+script:
+  - tox
 
 
 deploy:

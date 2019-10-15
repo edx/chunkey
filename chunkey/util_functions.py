@@ -71,6 +71,7 @@ def probe_video(VideoFileObject):
     )
 
     for line in iter(p.stdout.readline, b''):
+        line = line.decode('utf-8')
         if "Duration: " in line:
             # Duration
             vid_duration = line.split('Duration: ')[1].split(',')[0].strip()

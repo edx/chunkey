@@ -292,7 +292,7 @@ class VideoPipeline(object):
         '''
         encode_profiles = self.settings.TRANSCODE_PROFILES
 
-        for profile_name, _ in encode_profiles.iteritems():
+        for profile_name, _ in six.iteritems(encode_profiles):
             T1 = TransportStream()
 
             # TS manifest

@@ -1,3 +1,5 @@
 include README.rst
 include chunkey/tests/*.mp4
 include /encode_profiles.json
+include requirements/base.in
+include requirements/testing.in

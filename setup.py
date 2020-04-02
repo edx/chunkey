@@ -35,7 +35,7 @@ def is_requirement(line):
 
 setup(
     name='Chunkey',
-    version='1.2.3',
+    version='1.2.4',
     description='HLS Transport Stream/Encode Pipeline',
     url='http://github.com/edx/chunkey',
     author="edX",
@@ -43,13 +43,9 @@ setup(
     license="GNU",
     packages=['chunkey'],
     include_package_data=True,
-    install_requires=[
-        'boto',
-        'requests',
-        'pyyaml'
-    ],
     test_suite='nose.collector',
-    tests_require=['nose'],
     data_files=[('', ['encode_profiles.json'])],
+    install_requires=load_requirements('requirements/base.in'),
+    tests_require=load_requirements('requirements/testing.in'),
     zip_safe=False
 )

@@ -54,7 +54,7 @@ class TestFFMPEGCompile(unittest.TestCase):
 
         self.assertTrue(
             "usage: ffprobe [OPTIONS] [INPUT_FILE]" in
-            [l for l in probe_commands]
+            probe_commands
         )
 
 

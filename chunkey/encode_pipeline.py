@@ -7,8 +7,6 @@ Generate master manifest, upload (easy, via boto) to output bucket
 
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
 import os
 import sys
 import subprocess
@@ -33,6 +31,7 @@ class VideoFile(object):
     """
     A simple object for a video file
     """
+
     def __init__(self, **kwargs):
         self.filepath = kwargs.get('filepath', None)
         self.duration = None
@@ -44,6 +43,7 @@ class TransportStream(object):
     """
     A mini class for the TS
     """
+
     def __init__(self):
         self.bandwidth = None
         self.resolution = None
@@ -54,6 +54,7 @@ class VideoPipeline(object):
     """
     Encode Pipeline
     """
+
     def __init__(self, mezz_file, **kwargs):
         self.settings = kwargs.get('settings', None)
         self.clean = kwargs.get('clean', True)
@@ -100,8 +101,8 @@ class VideoPipeline(object):
         r = requests.get(self.mezz_file, stream=True)
 
         with open(os.path.join(
-            self.settings.workdir,
-            os.path.basename(self.mezz_file)
+                self.settings.workdir,
+                os.path.basename(self.mezz_file)
         ), 'wb') as f:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:  # filter out keep-alive new chunks
@@ -134,7 +135,7 @@ class VideoPipeline(object):
             return scalar_command
 
         if (aspect_ratio - .00001) <= \
-            self.settings.TARGET_ASPECT_RATIO <= \
+                self.settings.TARGET_ASPECT_RATIO <= \
                 (aspect_ratio + .00001):
             return scalar_command
 
@@ -156,7 +157,7 @@ class VideoPipeline(object):
 
             # padding
             scalar_command += ",pad=" + target_horiz_resolution + \
-                ":" + target_vertical_resolution
+                              ":" + target_vertical_resolution
             scalar_command += ":0:" + str(int(scalar))
             return scalar_command
         if aspect_ratio < self.settings.TARGET_ASPECT_RATIO:
@@ -235,14 +236,12 @@ class VideoPipeline(object):
 
             ffcommand.append(destination)
             if ffcommand:
-
                 self.encode_list.append(' '.join((ffcommand)))
         return None
 
     def _execute_encode(self):
         # pylint: disable=missing-docstring
         for command in self.encode_list:
-
             process = subprocess.Popen(
                 command,
                 stdout=subprocess.PIPE,

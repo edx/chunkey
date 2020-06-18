@@ -4,7 +4,6 @@ main build test
 Note: until we include ffmpeg in the build, there's only so much we can do
 
 """
-from __future__ import absolute_import
 import os
 import sys
 import unittest

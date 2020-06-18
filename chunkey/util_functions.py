@@ -3,8 +3,6 @@
 
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
 import sys
 import subprocess
 
@@ -47,7 +45,8 @@ def status_bar(process):
 
                 sys.stdout.write('\r')
                 i = int(pctg * 20.0)
-                sys.stdout.write("%s : [%-20s] %d%%" % ('Transcode', '=' * i, int(pctg * 100)))  # pylint: disable=unicode-format-string
+                sys.stdout.write("%s : [%-20s] %d%%" % (
+                    'Transcode', '=' * i, int(pctg * 100)))  # pylint: disable=unicode-format-string
                 sys.stdout.flush()
 
     # For display politeness

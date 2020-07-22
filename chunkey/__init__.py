@@ -1,7 +1,7 @@
 import os
 import sys
 import json
-import nose
+import pytest
 
 from .encode_pipeline import VideoPipeline
 from . import util_functions
@@ -86,7 +86,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             'tests'
         )
         os.chdir(test_dir)
-        test_bool = nose.run()
+        test_bool = pytest.run()
 
         # Return to previous state
         os.chdir(current_dir)

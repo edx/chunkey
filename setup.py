@@ -42,7 +42,7 @@ setup(
     license="GNU",
     packages=['chunkey'],
     include_package_data=True,
-    test_suite='nose.collector',
+    test_suite='.',
     data_files=[('', ['encode_profiles.json'])],
     install_requires=load_requirements('requirements/base.in'),
     tests_require=load_requirements('requirements/testing.in'),

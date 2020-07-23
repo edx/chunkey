@@ -11,7 +11,7 @@
 -c constraints.txt
 
 pyyaml
+pytest-cov
 boto
-nose
 requests
 

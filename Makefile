@@ -1,4 +1,4 @@
-.PHONY: clean quality requirements validate
+.PHONY: clean quality requirements validate quality-python test test-python
 
 clean:
 	find . -name '__pycache__' -exec rm -rf {} +
@@ -9,16 +9,16 @@ clean:
 	rm -fr dist/
 	rm -fr *.egg-info
 
-quality:
+quality-python:
 	tox -e quality
 
+quality: quality-python
 
 requirements:
 	pip install -r requirements/dev.txt
 
 validate: clean
 	tox
-
 
 upgrade: export CUSTOM_COMPILE_COMMAND=make upgrade
 upgrade: ## update the requirements/*.txt files with the latest packages satisfying requirements/*.in
@@ -33,3 +33,8 @@ upgrade: ## update the requirements/*.txt files with the latest packages satisfy
 	# Let tox control the Django version for tests
 	sed '/^[dD]jango==/d' requirements/testing.txt > requirements/testing.tmp
 	mv requirements/testing.tmp requirements/testing.txt
+
+test-python: clean ## run tests and generate coverage report
+	tox -e unittest
+
+test: test-python ## run tests

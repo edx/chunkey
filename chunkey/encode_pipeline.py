@@ -260,14 +260,24 @@ class VideoPipeline(object):
 
     def _determine_bandwidth(self, profile_name):
         """
-        TODO: Determine more accurate transmission overhead
+        Calculates upper bound of the overall bitrate for given stream profile
+
+        Enumerate all fragment files to find largest file in terms of size for give stream profile.
+        Get size of large file in bits, divide it by chunk/fragment duration to get bandwidth.
+
+        Arguments:
+            profile_name (str): profile index
+
+        Returns:
+            int: maximum bandwidth for given stream profile
         """
         max_bandwidth = 0.0
 
         for input_file in os.listdir(self.video_root):
             if fnmatch.fnmatch(input_file, '*.ts') and \
                     fnmatch.fnmatch(input_file, '_'.join((self.video_id, profile_name, '*'))):
-                bandwidth = float(os.stat(os.path.join(self.video_root, input_file)).st_size) / 9
+                file_size_bits = float(os.stat(os.path.join(self.video_root, input_file)).st_size) * 8
+                bandwidth = file_size_bits / self.settings.HLS_TIME
                 if bandwidth > max_bandwidth:
                     max_bandwidth = bandwidth
 
